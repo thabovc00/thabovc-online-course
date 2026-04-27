@@ -14,19 +14,19 @@ export default function CoursesPage() {
   const [search, setSearch] = useState("");
 
   // ตรรกะการกรองข้อมูล
-    const filtered = courses.filter((c) => {
-  const matchCat = activeCategory === "all" || c.category === activeCategory;
-  const matchLevel = activeLevel === "all" || c.level === activeLevel;
-  
-  // เพิ่มบรรทัดที่ตรวจสอบ subjectCode เข้าไปแบบนี้ครับ
-  const matchSearch = (c.subject || "").toLowerCase().includes(search.toLowerCase()) || 
-                      (c.teacher || "").toLowerCase().includes(search.toLowerCase()) ||
-                      (c.subjectCode || "").toLowerCase().includes(search.toLowerCase()); // ✅ เพิ่มบรรทัดนี้
-                      
-  return matchCat && matchLevel && matchSearch;
-    });
+  const filtered = courses.filter((c) => {
+    const matchCat = activeCategory === "all" || c.category === activeCategory;
+    const matchLevel = activeLevel === "all" || c.level === activeLevel;
+    
+    // เพิ่มบรรทัดที่ตรวจสอบ subjectCode เข้าไปแบบนี้ครับ
+    const matchSearch = (c.subject || "").toLowerCase().includes(search.toLowerCase()) || 
+                        (c.teacher || "").toLowerCase().includes(search.toLowerCase()) ||
+                        (c.subjectCode || "").toLowerCase().includes(search.toLowerCase()); // ✅ เพิ่มบรรทัดนี้
+                        
+    return matchCat && matchLevel && matchSearch;
+  });
 
-    return (
+  return (
     <>
       <Navbar />
 
@@ -43,7 +43,7 @@ export default function CoursesPage() {
         <div style={{ position: "relative", zIndex: 2, maxWidth: 800, margin: "0 auto" }}>
           <p style={{ fontSize: 11, letterSpacing: 3, opacity: 0.8, marginBottom: 10, textTransform: "uppercase" }}>Online Learning Center</p>
           <h1 style={{ fontSize: "clamp(28px, 5vw, 42px)", fontWeight: 700, lineHeight: 1.2, marginBottom: 15 }}>
-            เรียนรู้ทุกวิชา <span style={{ color: "#bfdbfe" }}>กับครูผู้เชี่ยวชาญ</span>
+            เรียนรู้ทุกวิชา <span style={{ color: "#bfdbfe" }}>กับครูอาจารย์</span>
           </h1>
           <p style={{ fontSize: "clamp(14px, 2vw, 16px)", opacity: 0.9, marginBottom: 30 }}>เลือกเรียนได้ตามความสนใจ เรียนได้ทุกที่ ทุกเวลา</p>
 
@@ -103,6 +103,25 @@ export default function CoursesPage() {
         </div>
       </div>
 
+      {/* ⬇️ ชุดคำสั่งบังคับมือถือ (PC ไม่โดนผลกระทบ) ⬇️ */}
+      <style>{`
+        @media (max-width: 768px) {
+          .lh-layout {
+            flex-direction: column !important;
+            padding: 16px !important;
+          }
+          .lh-sidebar {
+            width: 100% !important;
+            position: static !important;
+            order: -1 !important; /* 👈 บังคับให้หมวดหมู่ขึ้นมาอยู่บนสุดเสมอ */
+            margin-bottom: 20px !important;
+          }
+          .lh-grid {
+            grid-template-columns: 1fr !important; /* มือถือแสดงวิชาแถวละ 1 อัน */
+          }
+        }
+      `}</style>
+
       {/* ── Body ── */}
       <div className="lh-layout" style={{ display: "flex", gap: 24, padding: "28px 32px", alignItems: "flex-start" }}>
 
@@ -134,29 +153,30 @@ export default function CoursesPage() {
         {/* Course area */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* ⬇️ วางโค้ดปุ่มระดับชั้นตรงนี้ ⬇️ */}
-  <div style={{ display: "flex", gap: "10px", marginBottom: "25px", flexWrap: "wrap" }}>
-    {levels.map((lvl) => (
-      <button
-        key={lvl.id}
-        onClick={() => setActiveLevel(lvl.id)}
-        style={{
-          padding: "8px 18px",
-          borderRadius: "100px",
-          border: "1px solid",
-          borderColor: activeLevel === lvl.id ? "#2563eb" : "#e2e8f0",
-          background: activeLevel === lvl.id ? "#2563eb" : "#fff",
-          color: activeLevel === lvl.id ? "#fff" : "#64748b",
-          fontSize: "13px",
-          fontWeight: "600",
-          cursor: "pointer",
-          transition: "all 0.2s"
-        }}
-      >
-        {lvl.label}
-      </button>
-    ))}
-  </div>
-  {/* ⬆️ จบส่วนปุ่มระดับชั้น ⬆️ */}
+          <div style={{ display: "flex", gap: "10px", marginBottom: "25px", flexWrap: "wrap" }}>
+            {levels.map((lvl) => (
+              <button
+                key={lvl.id}
+                onClick={() => setActiveLevel(lvl.id)}
+                style={{
+                  padding: "8px 18px",
+                  borderRadius: "100px",
+                  border: "1px solid",
+                  borderColor: activeLevel === lvl.id ? "#2563eb" : "#e2e8f0",
+                  background: activeLevel === lvl.id ? "#2563eb" : "#fff",
+                  color: activeLevel === lvl.id ? "#fff" : "#64748b",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
+                {lvl.label}
+              </button>
+            ))}
+          </div>
+          {/* ⬆️ จบส่วนปุ่มระดับชั้น ⬆️ */}
+          
           <p style={{ color: "#64748b", fontSize: 13, marginBottom: 18 }}>
             พบ <strong style={{ color: "#1e293b" }}>{filtered.length}</strong> รายวิชา
             {search && <span style={{ color: "#2563eb" }}> · "{search}"</span>}
@@ -173,39 +193,30 @@ export default function CoursesPage() {
                   <div style={{ height: 5, background: `linear-gradient(90deg,${course.color},${course.color}88)` }} />
 
                   <div style={{ padding: "20px 16px 15px", textAlign: "center" }}>
-
-
-  {/* ข้อมูลวิชา - เรียงจากบนลงล่างแบบกึ่งกลาง */}
   <div>
     <div style={{ 
-      fontSize: 10, 
+      fontSize: 14, 
       fontWeight: 700, 
       color: "#94a3b8", 
-      marginBottom: 4, 
+      marginBottom: 6, 
       letterSpacing: "0.5px" 
     }}>
       {course.subjectCode}
     </div>
 
-    <h3 style={{ 
-      fontSize: 15, 
-      fontWeight: 700, 
-      color: "#1e293b", 
-      lineHeight: 1.4, 
-      marginBottom: 4,
-      minHeight: "42px", // ล็อคความสูงไว้เพื่อให้ Card เท่ากัน
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
+    {/* แก้ไขตรง <h3> นี้ครับ */}
+    <div style={{ minHeight: "60px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
+   <h3 style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.3 }}>
       {course.subject}
-    </h3>
+   </h3>
+</div>
 
-    <p style={{ fontSize: 12, color: course.color, fontWeight: 600 }}>
+    <p style={{ fontSize: 13, color: course.color, fontWeight: 600 }}>
       {course.teacher}
     </p>
   </div>
 </div>
+                  
                   <div style={{ width: "100%", height: 160, overflow: "hidden", background: "#eee" }}>
                     <img src={course.image} alt={course.subject} style={{
                       width: "100%", height: "100%", objectFit: "cover",

@@ -36,7 +36,7 @@ const ContactPage = () => {
             <p className="text-2xl font-bold text-indigo-600 tracking-wide">วิทยาลัยเทคโนโลยีวิชาชีพท่าบ่อ</p>
             <h1 className="mt-2 text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">ทำความรู้จักกับบุคลากรของเรา</h1>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              วิทยาลัยเทคโนโลยีแห่งนี้ประกอบด้วยทีมงานผู้เชี่ยวชาญที่พร้อมให้ความช่วยเหลือและคำปรึกษาแก่นักเรียนทุกคนอย่างเต็มความสามารถ
+              วิทยาลัยเทคโนโลยีแห่งนี้ประกอบด้วยทีมงานอาจารย์ที่พร้อมให้ความช่วยเหลือและคำปรึกษาแก่นักเรียนทุกคนอย่างเต็มความสามารถ
             </p>
           </div>
 

@@ -5,7 +5,7 @@ export const englishCommunicationData = {
   subjectCode: "20000-1201", 
   teacher: "ครูกมลวรรณ", 
   subject: "ภาษาอังกฤษเพื่อการสื่อสาร",
-  category: "general", // หมวดวิชาสามัญ
+  category: "english", // หมวดวิชาสามัญ
   level: "pvc1", // ระดับชั้น ปวช.1
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // วิดีโอแนะนำรายวิชา
   
@@ -18,10 +18,10 @@ export const englishCommunicationData = {
     "พัฒนาทักษะการฟังและสำเนียงการออกเสียง (Pronunciation) ให้ชัดเจนขึ้น",
     "เพิ่มพูนคลังคำศัพท์ที่จำเป็นสำหรับการทำงานและชีวิตประจำวัน"
   ],
-  teacherBio: "ผู้เชี่ยวชาญด้านการสอนภาษาอังกฤษเพื่อการสื่อสาร มีเทคนิคการสอนที่เน้นความสนุกสนานและฝึกให้นักเรียนกล้าพูดภาษาอังกฤษในสถานการณ์จริง",
+  teacherBio: "อาจารย์ารสอนภาษาอังกฤษเพื่อการสื่อสาร มีเทคนิคการสอนที่เน้นความสนุกสนานและฝึกให้นักเรียนกล้าพูดภาษาอังกฤษในสถานการณ์จริง",
   
   // คุณสามารถเปลี่ยนเป็น path รูปในเครื่องได้ เช่น avatar: "/images/avatars/kamolwan.jpg"
-  avatar: "https://ui-avatars.com/api/?name=Kamolwan&background=0284c7&color=fff", 
+avatar: "/src/assets/teachers/no.png", 
   
   color: "#0284c7", // ใช้สีฟ้าสดใสสำหรับวิชาภาษาอังกฤษ
   image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800", // รูปประกอบเกี่ยวกับภาษาอังกฤษ

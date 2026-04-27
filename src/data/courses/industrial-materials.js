@@ -21,7 +21,7 @@ export const industrialMaterialsData = {
   ],
   teacherBio: "อาจารย์ประจำวิชาวัสดุช่างอุตสาหกรรม มีประสบการณ์ในการวิเคราะห์คุณสมบัติวัสดุและกระบวนการขึ้นรูปชิ้นงานในโรงงานอุตสาหกรรม",
   
-  avatar: "https://ui-avatars.com/api/?name=Kajonkiet&background=475569&color=fff", 
+ avatar: "/src/assets/teachers/no.png", 
   
   color: "#475569", // ใช้สี Slate (สีเทาเหล็ก) ให้ความรู้สึกถึงงานช่างและวัสดุ
   image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800", // รูปประกอบเกี่ยวกับเหล็กและวัสดุอุตสาหกรรม
