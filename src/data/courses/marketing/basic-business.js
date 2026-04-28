@@ -6,7 +6,7 @@ export const basicBusinessData = {
   subjectCode: "20000-1003", 
   teacher: "ครูอุวรา", 
   subject: "ธุรกิจเบื้องต้น",
-  category: "general", // หมวดวิชาสามัญ
+  category: "marketing", // หมวดวิชาสามัญ
   level: "pvc1", // ระดับชั้น ปวช.1
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   
@@ -20,10 +20,8 @@ export const basicBusinessData = {
     "พัฒนาแนวคิดการเป็นผู้ประกอบการ (Entrepreneurial Mindset)"
   ],
   teacherBio: "อาจารย์จและการจัดการ มีประสบการณ์ในการถ่ายทอดความรู้ด้านการประกอบธุรกิจขนาดย่อมและแผนธุรกิจเบื้องต้น",
-  
   // สามารถเปลี่ยนเป็นรูปครูในเครื่องได้ภายหลัง
- avatar: "/src/assets/teachers/AUwara.png", 
-  
+  avatar: "/images/AUwara.png", 
   color: "#6366f1", // ใช้สี Indigo (ม่วงคราม) ให้ลุคธุรกิจที่ทันสมัย
   image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800", // รูปประกอบด้านธุรกิจและกราฟข้อมูล
 

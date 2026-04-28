@@ -19,10 +19,8 @@ export const englishCommunicationData = {
     "เพิ่มพูนคลังคำศัพท์ที่จำเป็นสำหรับการทำงานและชีวิตประจำวัน"
   ],
   teacherBio: "อาจารย์ารสอนภาษาอังกฤษเพื่อการสื่อสาร มีเทคนิคการสอนที่เน้นความสนุกสนานและฝึกให้นักเรียนกล้าพูดภาษาอังกฤษในสถานการณ์จริง",
-  
   // คุณสามารถเปลี่ยนเป็น path รูปในเครื่องได้ เช่น avatar: "/images/avatars/kamolwan.jpg"
-avatar: "/src/assets/teachers/no.png", 
-  
+  avatar: "/images/no.png",  
   color: "#0284c7", // ใช้สีฟ้าสดใสสำหรับวิชาภาษาอังกฤษ
   image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800", // รูปประกอบเกี่ยวกับภาษาอังกฤษ
 

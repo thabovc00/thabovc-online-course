@@ -1,29 +1,43 @@
 // src/data/courses/index.js
-import { appliedProgrammingData } from "./applied-programming";
-import { thaiCommunicationData } from "./thai-communication";
-import { englishCommunicationData } from "./english-communication"; // 1. import มาเพิ่มตรงนี้
-import { healthSafetyData } from "./health-safety"; // 1. import เพิ่ม
-import { sustainableDevelopmentData } from "./sustainable-development"; // 1. import เพิ่ม
-import { basicBusinessData } from "./basic-business"; // 1. import เพิ่มตรงนี้
-import { computerOSData } from "./computer-os"; // 1. import เพิ่มตรงนี้
-import { wordProcessingData } from "./word-processing"; // 1. import เพิ่มตรงนี้
-import { computerMaintenanceData } from "./computer-maintenance"; // 1. import เพิ่มตรงนี้
-import { industrialMaterialsData } from "./industrial-materials"; // 1. import เพิ่ม
-import { basicMachineToolsData } from "./basic-machine-tools"; // 1. import เพิ่มตรงนี้
-import { weldingSheetMetalData } from "./welding-and-sheet-metal"; // 1. import เพิ่มตรงนี้
-import { fuelsLubricantsData } from "./fuels-and-lubricants"; // 1. import เพิ่มตรงนี้
-import { smallEnginesData } from "./small-engines"; // 1. import เพิ่มตรงนี้
-import { carServiceData } from "./car-service"; // 1. import เพิ่ม
-import { motorcycleMechanicData } from "./motorcycle-mechanic"; // 1. import เพิ่มตรงนี้
-import { digitalTechForCareerData } from "./digital-tech-for-career"; // 1. import เพิ่มตรงนี้
-import { basicTechnicalDrawingData } from "./basic-technical-drawing"; // 1. import เพิ่มตรงนี้
-import { basicElectricalData } from "./basic-electrical-electronics"; // 1. import เพิ่มตรงนี้
-import { dcCircuitsData } from "./dc-circuits"; // 1. import เพิ่มตรงนี้
-import { buildingElectricalInstallationData } from "./building-electrical-installation"; // 1. import เพิ่มตรงนี้
+import { appliedProgrammingData } from "./tech/applied-programming";
+import { thaiCommunicationData } from "./general/thai-communication";
+import { englishCommunicationData } from "./english/english-communication"; 
+import { healthSafetyData } from "./hospital-business/health-safety"; 
+import { sustainableDevelopmentData } from "./general/sustainable-development"; 
+import { basicBusinessData } from "./marketing/basic-business"; 
+import { computerOSData } from "./tech/computer-os"; 
+import { wordProcessingData } from "./tech/word-processing"; 
+import { computerMaintenanceData } from "./tech/computer-maintenance"; 
+import { industrialMaterialsData } from "./technical/industrial-materials"; 
+import { basicMachineToolsData } from "./technical/basic-machine-tools"; 
+import { weldingSheetMetalData } from "./technical/welding-and-sheet-metal"; 
+import { fuelsLubricantsData } from "./technical/fuels-and-lubricants"; 
+import { smallEnginesData } from "./technical/small-engines"; 
+import { carServiceData } from "./technical/car-service"; 
+import { motorcycleMechanicData } from "./technical/motorcycle-mechanic"; 
+import { digitalTechForCareerData } from "./tech/digital-tech-for-career"; 
+import { basicTechnicalDrawingData } from "./general/basic-technical-drawing"; 
+import { basicElectricalData } from "./electrical/basic-electrical-electronics"; 
+import { dcCircuitsData } from "./electrical/dc-circuits"; 
+import { buildingElectricalInstallationData } from "./electrical/building-electrical-installation"; 
+import { lightingDesignData } from "./electrical/lighting-design"; 
+import { vocationalScienceData } from "./general/vocational-science"; 
+import { civicsAndEthicsData } from "./general/civics-and-ethics"; 
+import { anatomyPhysiologyData } from "./hospital-business/anatomy-and-physiology"; 
+import { appliedScienceHealthData } from "./hospital-business/applied-science-health-business"; 
+import { healthcareServiceSafetyData } from "./hospital-business/healthcare-service-safety"; 
+import { healthEduDegenerationData } from "./hospital-business/health-education-physical-degeneration"; 
+import { businessMathematicsData } from "./hospital-business/business-mathematics"; // 1. import จากพาร์ทใหม่
+import { thaiHistoryData } from "./general/thai-history";
+import { basicSellingMarketingData } from "./marketing/basic-selling-marketing";
+import { basicAccountingData } from "./accounting/basic-accounting";
+import { digitalThaiTypingData } from "./accounting/digital-thai-typing"; // 1. import เพิ่มตรงนี้
+import { merchandisingAccounting1Data } from "./accounting/accounting-for-merchandising-1"; // 1. import เพิ่มตรงนี้
+import { merchandisingAccounting2Data } from "./accounting/accounting-for-merchandising-2"; // 1. import เล่ม 2 เพิ่มตรงนี้
 export const courses = [
   appliedProgrammingData,
   thaiCommunicationData,
-  englishCommunicationData, // 2. ใส่ลงใน array นี้ด้วย
+  englishCommunicationData, 
   healthSafetyData,
   sustainableDevelopmentData,
   basicBusinessData,
@@ -39,9 +53,23 @@ export const courses = [
   motorcycleMechanicData,
   digitalTechForCareerData,
   basicTechnicalDrawingData,
-  basicElectricalData, // 2. ใส่ลงใน array นี้ด้วย
-  dcCircuitsData, // 2. ใส่ลงใน array นี้ด้วย
-  buildingElectricalInstallationData, // 2. ใส่ลงใน array นี้ด้วย
+  basicElectricalData, 
+  dcCircuitsData, 
+  buildingElectricalInstallationData, 
+  lightingDesignData, 
+  vocationalScienceData, 
+  civicsAndEthicsData, 
+  anatomyPhysiologyData, 
+  appliedScienceHealthData, 
+  healthcareServiceSafetyData, 
+  healthEduDegenerationData, 
+  businessMathematicsData, // 2. เพิ่มเข้ามาในอาร์เรย์หลัก
+  thaiHistoryData, // 3. เพิ่มเข้ามาในอาร์เรย์หลัก
+  basicSellingMarketingData, // 4. เพิ่มเข้ามาในอาร์เรย์หลัก
+  basicAccountingData, // 5. เพิ่มเข้ามาในอาร์เรย์หลัก
+  digitalThaiTypingData, // 6. เพิ่มเข้ามาในอาร์เรย์หลัก
+  merchandisingAccounting1Data, // 7. เพิ่มเข้ามาในอาร์เรย์หลัก
+  merchandisingAccounting2Data, // 8. เพิ่มเข้ามาในอาร์เรย์หลัก
 ];
 
 export const categories = [
@@ -52,6 +80,7 @@ export const categories = [
   { id: "marketing",  label: "การตลาด",       icon: "📣" },
   { id: "technical",  label: "ช่างยนต์",   icon: "🛠️" },
   { id: "electrical",  label: "ช่างไฟฟ้า",   icon: "⚡" },
+  { id: "hospital-business", label: "ธุรกิจสถานพยาบาล", icon: "🏥" },
   { id: "general",      label: "วิชาสามัญ",           icon: "📚" },
 ];
 export const levels = [

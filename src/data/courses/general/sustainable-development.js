@@ -20,7 +20,7 @@ export const sustainableDevelopmentData = {
   ],
   teacherBio: "อาจารย์และแนวทางการพัฒนาชุมชนยั่งยืน มีความมุ่งมั่นที่จะส่งเสริมแนวคิดรักษ์โลกและจิตอาสาให้กับผู้เรียน",
   
-avatar: "/src/assets/teachers/no.png", 
+avatar: "/images/no.png", 
   
   color: "#15803d", // ใช้สีเขียวเข้ม (Forest Green) สื่อถึงความยั่งยืน
   image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800", // รูปธรรมชาติและโลกสีเขียว

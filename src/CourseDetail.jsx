@@ -1,9 +1,15 @@
+import { useEffect } from "react"; // 🌟 1. เพิ่ม useEffect
 import { useParams, Link } from "react-router-dom";
 import { courses } from "./data/courses/index";
 
 export default function CourseDetail() {
   const { courseId } = useParams();
   const course = courses.find(c => c.id === courseId);
+
+  // 🌟 2. เพิ่มคำสั่งให้เลื่อนขึ้นบนสุดเสมอเมื่อเปิดหน้านี้ (ใส่ไว้ตรงนี้เลย)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!course) return <div style={{ padding: 100, textAlign: 'center', fontSize: 20 }}>ไม่พบรายวิชาที่ท่านต้องการ</div>;
 

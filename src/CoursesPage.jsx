@@ -1,5 +1,5 @@
 // src/coursesPage.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
 import { courses, categories, levels } from "./data/courses"; 
 import Navbar from "./components/Navbar";
@@ -7,24 +7,38 @@ import Navbar from "./components/Navbar";
 export default function CoursesPage() {
   const navigate = useNavigate(); 
   
-  // ประกาศ State ไว้ที่นี่ที่เดียว (ห้ามมีซ้ำข้างล่าง)
+  // ประกาศ State ไว้ที่นี่ที่เดียว
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeLevel, setActiveLevel] = useState("all"); 
   const [hoveredId, setHoveredId] = useState(null);
   const [search, setSearch] = useState("");
 
-  // ตรรกะการกรองข้อมูล
+  // ตั้งค่าหน้าปัจจุบันและจำนวนวิชาต่อหน้า
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
+  // รีเซ็ตกลับไปหน้า 1 ทันทีที่มีการค้นหาหรือเปลี่ยนหมวดหมู่
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrentPage(1);
+  }, [activeCategory, activeLevel, search]);
+
+  // ตรรกะการกรองข้อมูล (คงเดิม)
   const filtered = courses.filter((c) => {
     const matchCat = activeCategory === "all" || c.category === activeCategory;
     const matchLevel = activeLevel === "all" || c.level === activeLevel;
-    
-    // เพิ่มบรรทัดที่ตรวจสอบ subjectCode เข้าไปแบบนี้ครับ
     const matchSearch = (c.subject || "").toLowerCase().includes(search.toLowerCase()) || 
                         (c.teacher || "").toLowerCase().includes(search.toLowerCase()) ||
-                        (c.subjectCode || "").toLowerCase().includes(search.toLowerCase()); // ✅ เพิ่มบรรทัดนี้
+                        (c.subjectCode || "").toLowerCase().includes(search.toLowerCase());
                         
     return matchCat && matchLevel && matchSearch;
   });
+
+  // คำนวณตัดแบ่งข้อมูลให้แสดงแค่ 15 ตัวต่อหน้า
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <>
@@ -103,7 +117,7 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      {/* ⬇️ ชุดคำสั่งบังคับมือถือ (PC ไม่โดนผลกระทบ) ⬇️ */}
+      {/* ชุดคำสั่งบังคับมือถือ (PC ไม่โดนผลกระทบ) */}
       <style>{`
         @media (max-width: 768px) {
           .lh-layout {
@@ -113,11 +127,11 @@ export default function CoursesPage() {
           .lh-sidebar {
             width: 100% !important;
             position: static !important;
-            order: -1 !important; /* 👈 บังคับให้หมวดหมู่ขึ้นมาอยู่บนสุดเสมอ */
+            order: -1 !important;
             margin-bottom: 20px !important;
           }
           .lh-grid {
-            grid-template-columns: 1fr !important; /* มือถือแสดงวิชาแถวละ 1 อัน */
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
@@ -152,7 +166,7 @@ export default function CoursesPage() {
 
         {/* Course area */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* ⬇️ วางโค้ดปุ่มระดับชั้นตรงนี้ ⬇️ */}
+          {/* ปุ่มระดับชั้น */}
           <div style={{ display: "flex", gap: "10px", marginBottom: "25px", flexWrap: "wrap" }}>
             {levels.map((lvl) => (
               <button
@@ -175,7 +189,6 @@ export default function CoursesPage() {
               </button>
             ))}
           </div>
-          {/* ⬆️ จบส่วนปุ่มระดับชั้น ⬆️ */}
           
           <p style={{ color: "#64748b", fontSize: 13, marginBottom: 18 }}>
             พบ <strong style={{ color: "#1e293b" }}>{filtered.length}</strong> รายวิชา
@@ -183,7 +196,8 @@ export default function CoursesPage() {
           </p>
 
           <div className="lh-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
-            {filtered.map(course => {
+            {/* ลูปแสดงเฉพาะ 15 ตัว */}
+            {currentItems.map(course => {
               const hovered = hoveredId === course.id;
               return (
                 <div key={course.id} className="lh-card"
@@ -193,29 +207,28 @@ export default function CoursesPage() {
                   <div style={{ height: 5, background: `linear-gradient(90deg,${course.color},${course.color}88)` }} />
 
                   <div style={{ padding: "20px 16px 15px", textAlign: "center" }}>
-  <div>
-    <div style={{ 
-      fontSize: 14, 
-      fontWeight: 700, 
-      color: "#94a3b8", 
-      marginBottom: 6, 
-      letterSpacing: "0.5px" 
-    }}>
-      {course.subjectCode}
-    </div>
+                    <div>
+                      <div style={{ 
+                        fontSize: 14, 
+                        fontWeight: 700, 
+                        color: "#94a3b8", 
+                        marginBottom: 6, 
+                        letterSpacing: "0.5px" 
+                      }}>
+                        {course.subjectCode}
+                      </div>
 
-    {/* แก้ไขตรง <h3> นี้ครับ */}
-    <div style={{ minHeight: "60px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
-   <h3 style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.3 }}>
-      {course.subject}
-   </h3>
-</div>
+                      <div style={{ minHeight: "60px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 6 }}>
+                        <h3 style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.3 }}>
+                          {course.subject}
+                        </h3>
+                      </div>
 
-    <p style={{ fontSize: 13, color: course.color, fontWeight: 600 }}>
-      {course.teacher}
-    </p>
-  </div>
-</div>
+                      <p style={{ fontSize: 13, color: course.color, fontWeight: 600 }}>
+                        {course.teacher}
+                      </p>
+                    </div>
+                  </div>
                   
                   <div style={{ width: "100%", height: 160, overflow: "hidden", background: "#eee" }}>
                     <img src={course.image} alt={course.subject} style={{
@@ -243,6 +256,67 @@ export default function CoursesPage() {
               );
             })}
           </div>
+
+          {/* ชุดปุ่มกดเปลี่ยนหน้า */}
+          {totalPages > 1 && (
+            <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 40 }}>
+              <button
+                onClick={() => { // 🌟 เพิ่มเงื่อนไข scroll ขึ้นบน
+                  setCurrentPage(prev => Math.max(prev - 1, 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" }); 
+                }}
+                disabled={currentPage === 1}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, border: "1px solid #e2e8f0",
+                  background: currentPage === 1 ? "#f8fafc" : "#fff",
+                  color: currentPage === 1 ? "#94a3b8" : "#1e293b",
+                  cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                  fontSize: 14, fontWeight: 600
+                }}
+              >
+                ก่อนหน้า
+              </button>
+              
+              {/* สร้างปุ่มตัวเลขหน้า */}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => { // 🌟 เพิ่มเงื่อนไข scroll ขึ้นบน
+                    setCurrentPage(i + 1);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  style={{
+                    width: 36, height: 36, borderRadius: 8,
+                    border: currentPage === i + 1 ? "none" : "1px solid #e2e8f0",
+                    background: currentPage === i + 1 ? "#2563eb" : "#fff",
+                    color: currentPage === i + 1 ? "#fff" : "#1e293b",
+                    cursor: "pointer",
+                    fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center"
+                  }}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => { // 🌟 เพิ่มเงื่อนไข scroll ขึ้นบน
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                disabled={currentPage === totalPages}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, border: "1px solid #e2e8f0",
+                  background: currentPage === totalPages ? "#f8fafc" : "#fff",
+                  color: currentPage === totalPages ? "#94a3b8" : "#1e293b",
+                  cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                  fontSize: 14, fontWeight: 600
+                }}
+              >
+                ถัดไป
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
 

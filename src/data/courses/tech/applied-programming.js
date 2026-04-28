@@ -16,7 +16,7 @@ export const appliedProgrammingData = {
   ],
   teacherBio: "อาจารย์ด้านการพัฒนาซอฟต์แวร์ และระบบสารสนเทศ มีความมุ่งมั่นที่จะปูพื้นฐานการเขียนโปรแกรมให้นักเรียนนำไปใช้ประกอบอาชีพได้",
   color: "#4f46e5",
-   avatar: "/src/assets/teachers/Techasit.png", 
+  avatar: "/images/Techasit.png", 
   image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800",
 
   lessons: [

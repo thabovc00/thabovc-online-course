@@ -17,7 +17,8 @@ export const thaiCommunicationData = {
     "รู้วิธีการเขียนบันทึก ข้อความ และรายงานประเภทต่างๆ ได้อย่างมืออาชีพ"
   ],
   teacherBio: "อาจารย์าษาไทยและศิลปะการสื่อสาร มีประสบการณ์การสอนและการเป็นวิทยากรด้านการพูดในที่ชุมชนมากกว่า 10 ปี",
-avatar: "/src/assets/teachers/Jiraporn.png", 
+
+avatar: "/images/Jiraporn.png", 
   color: "#e11d48", // ใช้สีแดงหรือสีที่เหมาะกับวิชาสายสามัญ
   image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=800",
 

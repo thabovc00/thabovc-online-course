@@ -20,8 +20,7 @@ export const carServiceData = {
     "เข้าใจขั้นตอนการตรวจเช็กสภาพรถยนต์ตามระยะเวลา (Periodic Maintenance)"
   ],
   teacherBio: "อาจารย์ประจำวิชางานบริการรถยนต์ มีความเชี่ยวชาญด้านเทคนิคการบำรุงรักษารถยนต์สมัยใหม่และการใช้เครื่องมือวิเคราะห์ปัญหา มุ่งเน้นการสอนที่เน้นมาตรฐานศูนย์บริการมาตรฐาน",
-  
-avatar: "/src/assets/teachers/no.png",   
+  avatar: "/images/no.png", 
   color: "#1e293b", // ใช้สีน้ำเงินเข้ม (Slate/Navy) สื่อถึงความเป็นมืออาชีพในศูนย์บริการ
   image: "https://e-training.tpqi.go.th/data-file/courses/thumbnail/140921143933-%E0%B8%9A%E0%B8%A3%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B8%B2%E0%B8%99%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C.jpg", // รูปภาพช่างซ่อมรถยนต์ใน workshop
 
