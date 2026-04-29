@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "หน้าแรก", path: "/" },
+  { label: "หน้าแรก", path: "/HomePage" }, // ✅ ต้องมี / นำหน้าแบบนี้ครับ
   { label: "รวมวิชาทั้งหมด", path: "/courses" },
   { label: "ศูนย์ประกาศ", path: "/AnnouncementPage" },
   { label: "ติดต่อ", path: "/ContactPage" },
@@ -55,7 +55,7 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate("HomePage")}
           >
             <div style={{
               width: 34, height: 34, borderRadius: 9, flexShrink: 0,

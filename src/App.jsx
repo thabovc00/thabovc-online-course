@@ -18,7 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Route เดิมของคุณ */}
-        <Route path="/home" element={<HomePage />} /> {/* เปลี่ยน path ของ HomePage หนีจาก / */}
+        <Route path="/HomePage" element={<HomePage />} /> {/* เปลี่ยน path ของ HomePage หนีจาก / */}
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/course/:courseId" element={<CourseDetail />} />
         <Route path="/ContactPage" element={<ContactPage />} />
