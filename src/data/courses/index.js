@@ -1,21 +1,21 @@
 // src/data/courses/index.js
-import { appliedProgrammingData } from "./tech/applied-programming";
+import { appliedProgrammingData } from "./digital-business/applied-programming";
 import { thaiCommunicationData } from "./general/thai-communication";
 import { englishCommunicationData } from "./english/english-communication"; 
 import { healthSafetyData } from "./hospital-business/health-safety"; 
 import { sustainableDevelopmentData } from "./general/sustainable-development"; 
 import { basicBusinessData } from "./marketing/basic-business"; 
-import { computerOSData } from "./tech/computer-os"; 
-import { wordProcessingData } from "./tech/word-processing"; 
-import { computerMaintenanceData } from "./tech/computer-maintenance"; 
-import { industrialMaterialsData } from "./technical/industrial-materials"; 
-import { basicMachineToolsData } from "./technical/basic-machine-tools"; 
-import { weldingSheetMetalData } from "./technical/welding-and-sheet-metal"; 
-import { fuelsLubricantsData } from "./technical/fuels-and-lubricants"; 
-import { smallEnginesData } from "./technical/small-engines"; 
-import { carServiceData } from "./technical/car-service"; 
-import { motorcycleMechanicData } from "./technical/motorcycle-mechanic"; 
-import { digitalTechForCareerData } from "./tech/digital-tech-for-career"; 
+import { computerOSData } from "./digital-business/computer-os"; 
+import { wordProcessingData } from "./digital-business/word-processing"; 
+import { computerMaintenanceData } from "./digital-business/computer-maintenance"; 
+import { industrialMaterialsData } from "./automotive/industrial-materials"; 
+import { basicMachineToolsData } from "./automotive/basic-machine-tools"; 
+import { weldingSheetMetalData } from "./automotive/welding-and-sheet-metal"; 
+import { fuelsLubricantsData } from "./automotive/fuels-and-lubricants"; 
+import { smallEnginesData } from "./automotive/small-engines"; 
+import { carServiceData } from "./automotive/car-service"; 
+import { motorcycleMechanicData } from "./automotive/motorcycle-mechanic"; 
+import { digitalTechForCareerData } from "./digital-business/digital-tech-for-career"; 
 import { basicTechnicalDrawingData } from "./general/basic-technical-drawing"; 
 import { basicElectricalData } from "./electrical/basic-electrical-electronics"; 
 import { dcCircuitsData } from "./electrical/dc-circuits"; 
@@ -74,11 +74,11 @@ export const courses = [
 
 export const categories = [
   { id: "all",        label: "ทั้งหมด",       icon: "⊞" },
-  { id: "tech",       label: "เทคโนโลยีธุรกิจดิจิทัล",     icon: "💻" },
+  { id: "digital-business",       label: "เทคโนโลยีธุรกิจดิจิทัล",     icon: "💻" },
   { id: "accounting", label: "บัญชี", icon: "📊" },
   { id: "english",    label: "ภาษาต่างประเทศ",   icon: "🌐" },
   { id: "marketing",  label: "การตลาด",       icon: "📣" },
-  { id: "technical",  label: "ช่างยนต์",   icon: "🛠️" },
+  { id: "automotive",  label: "ช่างยนต์",   icon: "🛠️" },
   { id: "electrical",  label: "ช่างไฟฟ้า",   icon: "⚡" },
   { id: "hospital-business", label: "ธุรกิจสถานพยาบาล", icon: "🏥" },
   { id: "general",      label: "วิชาสามัญ",           icon: "📚" },

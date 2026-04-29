@@ -6,8 +6,9 @@ export const computerMaintenanceData = {
   subjectCode: "21910-2018", 
   teacher: "ครูเทพาธิป", 
   subject: "คอมพิวเตอร์และการบำรุงรักษา",
-  category: "tech", // หมวดเทคโนโลยีธุรกิจดิจิทัล
+  category: "digital-business", // หมวดเทคโนโลยีธุรกิจดิจิทัล
   level: "pvc1", // ระดับชั้น ปวช.1
+  targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   
   contentTitle: "เจาะลึกฮาร์ดแวร์และการประกอบเครื่องคอมพิวเตอร์แบบมืออาชีพ",

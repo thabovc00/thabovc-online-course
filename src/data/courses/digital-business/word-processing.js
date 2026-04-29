@@ -6,8 +6,9 @@ export const wordProcessingData = {
   subjectCode: "21910-2004", 
   teacher: "ครูเทพาธิป", 
   subject: "โปรแกรมประมวลผลคำ",
-  category: "tech", // หมวดเทคโนโลยีธุรกิจดิจิทัล
+  category: "digital-business", // หมวดเทคโนโลยีธุรกิจดิจิทัล
   level: "pvc1", // ระดับชั้น ปวช.1
+  targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   
   contentTitle: "การสร้างเอกสารอย่างมืออาชีพด้วยโปรแกรมประมวลผลคำ",

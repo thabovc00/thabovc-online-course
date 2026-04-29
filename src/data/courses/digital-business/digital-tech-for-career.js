@@ -6,8 +6,9 @@ export const digitalTechForCareerData = {
   subjectCode: "20001-1105", 
   teacher: "ครูเตชสิทธิ์", 
   subject: "การใช้เทคโนโลยีดิจิทัลเพื่ออาชีพ",
-  category: "tech", // หมวดเทคโนโลยีธุรกิจดิจิทัล
+  category: "digital-business", // หมวดเทคโนโลยีธุรกิจดิจิทัล
   level: "pvc1", // ระดับชั้น ปวช.1
+  targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   
   contentTitle: "การประยุกต์ใช้เทคโนโลยีดิจิทัลในยุคการทำงานสมัยใหม่",

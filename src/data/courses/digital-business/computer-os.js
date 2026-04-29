@@ -6,8 +6,9 @@ export const computerOSData = {
   subjectCode: "21910-2001", 
   teacher: "ครูเทพาธิป", 
   subject: "ระบบปฏิบัติการคอมพิวเตอร์",
-  category: "tech", // หมวดเทคโนโลยีธุรกิจดิจิทัล
+  category: "digital-business", // หมวดเทคโนโลยีธุรกิจดิจิทัล
   level: "pvc1", // ระดับชั้น ปวช.1
+  targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   
   contentTitle: "ทำความเข้าใจระบบปฏิบัติการ หัวใจสำคัญของคอมพิวเตอร์",
