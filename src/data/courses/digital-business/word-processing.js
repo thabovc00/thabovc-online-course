@@ -7,7 +7,7 @@ export const wordProcessingData = {
   teacher: "ครูเทพาธิป", 
   subject: "โปรแกรมประมวลผลคำ",
   category: "digital-business", // หมวดเทคโนโลยีธุรกิจดิจิทัล
-  level: "pvc1", // ระดับชั้น ปวช.1
+  level: "ปวช.1", // ระดับชั้น ปวช.1
   targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"],
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   

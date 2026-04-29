@@ -7,7 +7,7 @@ export const fuelsLubricantsData = {
   teacher: "ครูนลินนิภา", 
   subject: "เชื้อเพลิงและวัสดุหล่อลื่น",
   category: "automotive", // หมวดวิชาทักษะวิชาชีพ
-  level: "pvc1", // ระดับชั้น ปวช.1
+  level: "ปวช.1", // ระดับชั้น ปวช.1
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
   targetMajors: ["ช่างยนต์", "สาขาช่างยนต์"], // ใส่ดักไว้ทั้ง 2 คำเลยเผื่อเด็กพิมพ์/เลือกมาต่างกัน
   contentTitle: "ความรู้ด้านเชื้อเพลิงและระบบหล่อลื่นในงานเครื่องกล",

@@ -4,7 +4,7 @@ export const appliedProgrammingData = {
   teacher: "ครูเตชสิทธิ์", // เปลี่ยนชื่อคุณครูตามจริง
   subject: "การเขียนโปรแกรมเชิงประยุกต์",
   category: "digital-business",
-  level: "pvc2",
+  level: "ปวช.2",
     targetMajors: ["เทคโนโลยีธุรกิจดิจิทัล", "สาขาเทคโนโลยีธุรกิจดิจิทัล"], // ใส่ดักไว้ทั้ง 2 คำเลยเผื่อเด็กพิมพ์/เลือกมาต่างกัน
 
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",

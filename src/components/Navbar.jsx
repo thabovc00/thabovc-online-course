@@ -1,20 +1,36 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+// ✅ นำเข้า SweetAlert2
+import Swal from "sweetalert2";
 
 const navItems = [
-  { label: "หน้าแรก", path: "/HomePage" }, // ✅ ต้องมี / นำหน้าแบบนี้ครับ
+  { label: "หน้าแรก", path: "/HomePage" },
   { label: "รวมวิชาทั้งหมด", path: "/courses" },
+  { label: "ข้อมูลส่วนตัว", path: "/profile" }, // เพิ่มบรรทัดนี้
   { label: "ศูนย์ประกาศ", path: "/AnnouncementPage" },
   { label: "ติดต่อ", path: "/ContactPage" },
 ];
+
+const majorTranslations = {
+  "automotive": "ช่างยนต์",
+  "electrical": "ช่างไฟฟ้า",
+  "electronics": "ช่างอิเล็กทรอนิกส์",
+  "digital-business": "เทคโนโลยีธุรกิจดิจิทัล",
+  "hospital-business": "ธุรกิจสถานพยาบาล",
+  "tourism": "การท่องเที่ยว",
+  "hotel": "การโรงแรม",
+  "marketing": "การตลาด",
+  "accounting": "การบัญชี",
+  "food-nutrition": "อาหารและโภชนาการ",
+  "architecture": "สถาปัตยกรรม"
+};
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   
-  // ✅ เพิ่ม/ปรับ State สำหรับเก็บข้อมูลนักเรียนให้ครบ
   const [userData, setUserData] = useState({
     name: "",
     major: "",
@@ -22,26 +38,54 @@ export default function Navbar() {
   });
 
   useEffect(() => {
-    // ✅ ดึงข้อมูลทั้งหมดจาก localStorage
     const name = localStorage.getItem("userName");
     const major = localStorage.getItem("userMajor");
     const level = localStorage.getItem("userLevel");
 
     if (name) {
+      setUserData({ name, major, level });
+      const displayMajor = majorTranslations[major] || major || "ไม่ระบุสาขา";
+
       setUserData({
         name: name,
-        major: major || "ไม่ระบุสาขา",
+        major: displayMajor,
         level: level || ""
       });
     }
   }, []);
 
+  // ✅ แก้ไขฟังก์ชัน handleLogout ตรงนี้
   const handleLogout = () => {
-    if (window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
-      localStorage.clear();
-      navigate("/");
-      window.location.reload();
-    }
+    Swal.fire({
+      title: "ออกจากระบบ?",
+      text: "คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444", // สีแดงปุ่มยืนยันให้เข้ากับ UI ของคุณ
+      cancelButtonColor: "#94a3b8",  // สีเทาปุ่มยกเลิก
+      confirmButtonText: "ใช่, ออกจากระบบ",
+      cancelButtonText: "ยกเลิก",
+      width: "360px", // ขนาดกะทัดรัด
+      padding: "1.5em",
+      background: "#fff",
+      backdrop: `rgba(0,0,0,0.4)` // พื้นหลังมืดนิดๆ ให้ป๊อปอัปเด่นขึ้น
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // แจ้งเตือนสถานะสำเร็จแบบรวดเร็ว (1 วินาที)
+        Swal.fire({
+          icon: "success",
+          title: "ออกจากระบบสำเร็จ!",
+          showConfirmButton: false,
+          timer: 1000,
+          width: "320px",
+        }).then(() => {
+          // ล้างข้อมูลและรีไดเรคหลัง Alert ปิดลง
+          localStorage.clear();
+          navigate("/");
+          window.location.reload();
+        });
+      }
+    });
   };
 
   return (

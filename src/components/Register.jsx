@@ -1,18 +1,21 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
     password: '',
     confirmPassword: '',
     level: 'ปวช.1',
-    category: 'ช่างยนต์' // หรือถ้าต้องการให้เป็น default ตาม option ที่มี
+    category: 'ช่างยนต์'
   });
-  
-  // ✅ เพิ่ม Loading State
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -22,37 +25,85 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("รหัสผ่านไม่ตรงกัน");
+      // ❌ อะเลิทแจ้งเตือนรหัสผ่านไม่ตรงกัน (สวยและชัดเจน)
+      Swal.fire({
+        icon: 'warning',
+        title: 'ข้อมูลไม่ถูกต้อง',
+        text: 'รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน',
+        confirmButtonColor: '#1a73e8',
+        confirmButtonText: 'ตกลง',
+        width: '350px',
+        padding: '1.5em',
+        background: '#fff',
+        backdrop: 'rgba(0,0,0,0.4)'
+      });
       return;
     }
 
-    // ✅ เริ่มโหลดเมื่อกดสมัคร
-    setIsLoading(true);
+    // ⏳ อะเลิท Loading Screen (มินิมอล กลางจอ)
+    Swal.fire({
+      title: 'กำลังบันทึกข้อมูล',
+      html: '<span style="font-size: 14px; color: #666;">กรุณารอสักครู่...</span>',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      width: '300px',
+      padding: '2em',
+      background: '#fff',
+      backdrop: 'rgba(255,255,255,0.8)', // แบล็คดรอปสีขาวโปร่งแสงดูละมุนตา
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
+    setIsLoading(true);
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwAq86PGKnwuXt3JwqSZ8Vz4VIDs8fq5Ean5TiZfnHg0FaYn0QHVQnv_7Yd1I1ZZsVRoQ/exec";
 
     try {
       await fetch(WEB_APP_URL, {
         method: 'POST',
-        mode: 'no-cors', 
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: "register",
           username: formData.username,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
           password: formData.password,
           category: formData.category,
           level: formData.level
         }),
       });
 
-      // เนื่องจากใช้ no-cors เราจะอ่านผลลัพธ์ไม่ได้ แต่ถ้าไม่มี error แปลว่าส่งออกไปแล้ว
-      alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
-      navigate('/'); // กลับหน้า Login
+      // ✅ อะเลิท สำเร็จ! (มีหลอดเวลาวิ่ง เร็วและสมูท)
+      Swal.fire({
+        icon: 'success',
+        title: 'สมัครสมาชิกสำเร็จ!',
+        text: 'ระบบกำลังพากลับไปหน้าเข้าสู่ระบบ',
+        timer: 1500, // ลดเวลาลงให้เร็วขึ้น
+        timerProgressBar: true,
+        showConfirmButton: false,
+        width: '350px',
+        padding: '1.5em',
+        background: '#fff',
+        backdrop: 'rgba(0,0,0,0.4)'
+      }).then(() => {
+        // ใช้ .then() ของ Swal เพื่อให้ชัวร์ว่าแอนิเมชันจบแล้วค่อยเปลี่ยนหน้า
+        navigate('/');
+      });
 
     } catch (error) {
-      alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      // ❌ อะเลิท Error กรณีเชื่อมต่อเซิร์ฟเวอร์ไม่ได้
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'ปิดหน้าต่าง',
+        width: '350px',
+        padding: '1.5em'
+      });
     } finally {
-      // ✅ ยกเลิก Loading ไม่ว่าจะสำเร็จหรือพัง
       setIsLoading(false);
     }
   };
@@ -63,93 +114,79 @@ const Register = () => {
         <h2 style={styles.title}>สมัครสมาชิกใหม่</h2>
         <form onSubmit={handleRegister} style={styles.form}>
           
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>ชื่อจริง (ภาษาอังกฤษเท่านั้น) <span style={styles.note}>*ใช้ล็อกอิน</span></label>
-            <input 
-              name="username"
-              type="text" 
-              placeholder="เช่น Somchai" 
-              style={styles.input}
-              onChange={handleChange}
-              required 
-            />
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={styles.label}>ชื่อจริง (ภาษาไทย)</label>
+              <input name="firstName" type="text" placeholder="ชื่อ" style={styles.input} onChange={handleChange} required />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={styles.label}>นามสกุล (ภาษาไทย)</label>
+              <input name="lastName" type="text" placeholder="นามสกุล" style={styles.input} onChange={handleChange} required />
+            </div>
           </div>
 
           <div style={styles.inputGroup}>
-            <label style={styles.label}>เลขบัตรประชาชน (รหัสผ่าน)</label>
-            <input 
-              name="password"
-              type="password" 
-              placeholder="ตัวเลข 13 หลัก" 
-              style={styles.input}
-              onChange={handleChange}
-              required 
-            />
+            <label style={styles.label}>ชื่อล็อกอิน (ภาษาอังกฤษเท่านั้น)</label>
+            <input name="username" type="text" placeholder="Firstname (English)" style={styles.input} onChange={handleChange} required />
           </div>
 
           <div style={styles.inputGroup}>
-            <label style={styles.label}>ยืนยันเลขบัตรประชาชนอีกครั้ง</label>
-            <input 
-              name="confirmPassword"
-              type="password" 
-              placeholder="กรอกรหัสผ่านซ้ำอีกครั้ง" 
-              style={styles.input}
-              onChange={handleChange}
-              required 
-            />
+            <label style={styles.label}>เบอร์โทรศัพท์</label>
+            <input name="phone" type="text" placeholder="08x-xxxxxxx" style={styles.input} onChange={handleChange} required />
           </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <div style={{ ...styles.inputGroup, flex: 1 }}>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>รหัสผ่าน (เลขบัตรประชาชน)</label>
+            <input name="password" type="password" placeholder="Password" style={styles.input} onChange={handleChange} required />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>ยืนยันรหัสผ่าน</label>
+            <input name="confirmPassword" type="password" placeholder="Confirm Password" style={styles.input} onChange={handleChange} required />
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+            <div style={{ flex: 1 }}>
               <label style={styles.label}>ชั้นปี</label>
-              <select name="level" style={styles.select} onChange={handleChange}>
-                <option>ปวช.1</option>
-                <option>ปวช.2</option>
-                <option>ปวช.3</option>
-                <option>ปวส.1</option>
-                <option>ปวส.2</option>
+              <select name="level" onChange={handleChange} value={formData.level} style={styles.select}>
+                <option value="ปวช.1">ปวช.1</option>
+                <option value="ปวช.2">ปวช.2</option>
+                <option value="ปวช.3">ปวช.3</option>
+                <option value="ปวส.1">ปวส.1</option>
+                <option value="ปวส.2">ปวส.2</option>
               </select>
             </div>
-
-            <div style={{ ...styles.inputGroup, flex: 2 }}>
+            <div style={{ flex: 2 }}>
               <label style={styles.label}>สาขาวิชา</label>
-              <select name="category" style={styles.select} onChange={handleChange}>
-                <option value="automotive">สาขาช่างยนต์</option>
-                <option value="electrical">สาขาช่างไฟฟ้า</option>
-                <option value="electronics">สาขาช่างอิเล็กทรอนิกส์</option>
-                <option value="digital-business">สาขาเทคโนโลยีธุรกิจดิจิทัล</option>
-                <option value="hospital-business">สาขาธุรกิจสถานพยาบาล</option>
-                <option value="tourism">สาขาการท่องเที่ยว</option>
-                <option value="hotel">สาขาการโรงแรม</option>
-                <option value="marketing">สาขาการตลาด</option>
-                <option value="accounting">สาขาการบัญชี</option>
-                <option value="food-nutrition">สาขาอาหารและโภชนาการ</option>
-                <option value="architecture">สาขาสถาปัตยกรรม</option>
+              <select name="category" style={styles.select} onChange={handleChange} value={formData.category}>
+                <option value="ช่างยนต์">สาขาช่างยนต์</option>
+                <option value="ช่างไฟฟ้า">สาขาช่างไฟฟ้า</option>
+                <option value="ช่างอิเล็กทรอนิกส์">สาขาช่างอิเล็กทรอนิกส์</option>
+                <option value="เทคโนโลยีธุรกิจดิจิทัล">สาขาเทคโนโลยีธุรกิจดิจิทัล</option>
+                <option value="ธุรกิจสถานพยาบาล">สาขาธุรกิจสถานพยาบาล</option>
+                <option value="การท่องเที่ยว">สาขาการท่องเที่ยว</option>
+                <option value="การโรงแรม">สาขาการโรงแรม</option>
+                <option value="การตลาด">สาขาการตลาด</option>
+                <option value="บัญชี">สาขาบัญชี</option>
+                <option value="อาหารและโภชนาการ">สาขาอาหารและโภชนาการ</option>
+                <option value="สถาปัตยกรรม">สาขาสถาปัตยกรรม</option>
               </select>
             </div>
           </div>
 
-          {/* ✅ ปรับปุ่มสมัครสมาชิกให้แสดงสถานะ Loading */}
           <button 
             type="submit" 
             style={{
-              ...styles.regBtn,
-              background: isLoading ? '#9ca3af' : '#1a73e8', // สีเทาเมื่อโหลด
-              cursor: isLoading ? 'wait' : 'pointer',
-            }}
-            disabled={isLoading} // ปิดปุ่มระหว่างรอ
+              ...styles.regBtn, 
+              background: isLoading ? '#9ca3af' : '#1a73e8',
+              cursor: isLoading ? 'not-allowed' : 'pointer'
+            }} 
+            disabled={isLoading}
           >
-            {isLoading ? 'กำลังส่งข้อมูล...' : 'ยืนยันการสมัคร'}
+            {isLoading ? 'กำลังประมวลผล...' : 'ยืนยันการสมัคร'}
           </button>
           
-          <button 
-            type="button" 
-            onClick={() => navigate('/')} 
-            style={styles.backBtn}
-            disabled={isLoading} // ปิดปุ่มยกเลิกระหว่างรอเช่นกัน
-          >
-            ยกเลิก
-          </button>
+          <button type="button" onClick={() => navigate('/')} style={styles.backBtn} disabled={isLoading}>ยกเลิก</button>
         </form>
       </div>
     </div>
@@ -163,9 +200,8 @@ const styles = {
   form: { display: 'flex', flexDirection: 'column' },
   inputGroup: { marginBottom: '15px' },
   label: { display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: '500' },
-  note: { color: '#666', fontSize: '11px' },
-  input: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box' },
-  select: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', background: '#fff' },
+  input: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box', outline: 'none' },
+  select: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', background: '#fff', outline: 'none' },
   regBtn: { color: '#fff', padding: '12px', border: 'none', borderRadius: '6px', fontWeight: 'bold', marginTop: '10px', transition: '0.3s' },
   backBtn: { background: 'none', color: '#666', padding: '10px', border: 'none', cursor: 'pointer', fontSize: '14px', marginTop: '5px' }
 };

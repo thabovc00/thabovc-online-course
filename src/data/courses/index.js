@@ -83,11 +83,13 @@ export const categories = [
   { id: "hospital-business", label: "ธุรกิจสถานพยาบาล", icon: "🏥" },
   { id: "general",      label: "วิชาสามัญ",           icon: "📚" },
 ];
+
 export const levels = [
-    { id: "all", label: "ทุกระดับชั้น" },
-    { id: "pvc1", label: "ปวช. 1" },
-    { id: "pvc2", label: "ปวช. 2" },
-    { id: "pvc3", label: "ปวช. 3" },
-    { id: "pvs1", label: "ปวส. 1" },
-    { id: "pvs2", label: "ปวส. 2" },
-  ];
+  { id: "all", label: "ทุกระดับชั้น" },
+  { id: "ปวช.1", label: "ปวช.1" }, // ใช้ภาษาไทยเป็น id เลย
+  { id: "ปวช.2", label: "ปวช.2" },
+  { id: "ปวช.3", label: "ปวช.3" },
+  { id: "ปวส.1", label: "ปวส.1" },
+  { id: "ปวส.2", label: "ปวส.2" },
+];
+  

@@ -7,7 +7,7 @@ export const basicMachineToolsData = {
   teacher: "ครูนลินนิภา", 
   subject: "งานเครื่องมือกลเบื้องต้น",
   category: "automotive", // หมวดวิชาทักษะวิชาชีพ
-  level: "pvc1", // ระดับชั้น ปวช.1
+  level: "ปวช.1", // ระดับชั้น ปวช.1
   targetMajors: ["ช่างยนต์", "สาขาช่างยนต์"], // ใส่ดักไว้ทั้ง 2 คำเลยเผื่อเด็กพิมพ์/เลือกมาต่างกัน
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", 
  
