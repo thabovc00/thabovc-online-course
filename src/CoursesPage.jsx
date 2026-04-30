@@ -18,7 +18,7 @@ export default function CoursesPage() {
   const [search, setSearch] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 6;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

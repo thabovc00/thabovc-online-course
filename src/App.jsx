@@ -8,7 +8,7 @@ import AnnouncementPage from "./AnnouncementPage";
 // Import โซน Components (ตรวจสอบ Path ตามรูปภาพของคุณ)
 import Login from "./components/Login"; 
 import Register from "./components/Register"; 
-import ProfilePage from "./components/ProfilePage"; // ✅ เพิ่มการ Import หน้าโปรไฟล์
+import ProfilePage from "./ProfilePage";
 
 function App() {
   return (

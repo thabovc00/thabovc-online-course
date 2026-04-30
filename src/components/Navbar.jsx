@@ -37,22 +37,21 @@ export default function Navbar() {
     level: ""
   });
 
-  useEffect(() => {
-    const name = localStorage.getItem("userName");
-    const major = localStorage.getItem("userMajor");
-    const level = localStorage.getItem("userLevel");
+ useEffect(() => {
+  const firstName = localStorage.getItem("userFirstName");  // ✅ เปลี่ยน
+  const lastName = localStorage.getItem("userLastName");    // ✅ เพิ่ม
+  const major = localStorage.getItem("userMajor");
+  const level = localStorage.getItem("userLevel");
+  const displayMajor = majorTranslations[major] || major || "ไม่ระบุสาขา";
 
-    if (name) {
-      setUserData({ name, major, level });
-      const displayMajor = majorTranslations[major] || major || "ไม่ระบุสาขา";
-
-      setUserData({
-        name: name,
-        major: displayMajor,
-        level: level || ""
-      });
-    }
-  }, []);
+  if (firstName) {
+    setUserData({
+      name: `${firstName} ${lastName}`,  // ✅ เปลี่ยน
+      major: displayMajor,
+      level: level || ""
+    });
+  }
+}, []);
 
   // ✅ แก้ไขฟังก์ชัน handleLogout ตรงนี้
   const handleLogout = () => {
@@ -99,7 +98,8 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}
-            onClick={() => navigate("HomePage")}
+            onClick={() => navigate("/HomePage")}
+
           >
             <div style={{
               width: 34, height: 34, borderRadius: 9, flexShrink: 0,
