@@ -5,7 +5,7 @@ import HomePage from "./HomePage";
 import ContactPage from "./ContactPage";
 import AnnouncementPage from "./AnnouncementPage";
 
-// Import โซน Components (ตรวจสอบ Path ตามรูปภาพของคุณ)
+// Import โซน Components
 import Login from "./components/Login"; 
 import Register from "./components/Register"; 
 import ProfilePage from "./ProfilePage";
@@ -14,19 +14,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* บังคับให้หน้าแรกสุดเป็นหน้า Login */}
-        <Route path="/" element={<Login />} /> 
+        {/* ✅ บังคับให้หน้าแรกสุด (/) เป็นหน้าคอร์สเรียนตามที่ต้องการ */}
+        <Route path="/" element={<CoursesPage />} /> 
+        
+        {/* เส้นทางอื่นๆ สำหรับเข้าหน้า Login และ Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* หน้าหลักและเมนูต่างๆ */}
         <Route path="/HomePage" element={<HomePage />} /> 
-        <Route path="/courses" element={<CoursesPage />} />
+        <Route path="/courses" element={<CoursesPage />} /> {/* มีไว้สำหรับเวลาพิมพ์ /courses ตรงๆ */}
         <Route path="/course/:courseId" element={<CourseDetail />} />
         <Route path="/ContactPage" element={<ContactPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
         
-        {/* ✅ เพิ่ม Route สำหรับหน้าข้อมูลส่วนตัว */}
+        {/* หน้าข้อมูลส่วนตัว */}
         <Route path="/profile" element={<ProfilePage />} /> 
         
       </Routes>

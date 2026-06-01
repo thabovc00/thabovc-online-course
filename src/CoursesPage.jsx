@@ -7,51 +7,65 @@ import Navbar from "./components/Navbar";
 export default function CoursesPage() {
   const navigate = useNavigate(); 
   
-  // ✅ 1. ดึงข้อมูลจาก LocalStorage ตรงๆ (เพราะเราใช้ "ปวช.1" หรือ "ปวช.2" ตรงๆ แล้ว)
+  // ตรวจสอบสถานะการเข้าสู่ระบบ
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const userLevel = localStorage.getItem('userLevel') || ""; 
+  // eslint-disable-next-line no-unused-vars
   const userMajor = localStorage.getItem('userMajor') || ""; 
 
   const [activeCategory, setActiveCategory] = useState("all");
-  // ✅ 2. ตั้งค่าเริ่มต้นให้ปุ่มระดับชั้น โฟกัสไปที่ชั้นของนักเรียนทันที
-  const [activeLevel, setActiveLevel] = useState(userLevel || "all"); 
+  // ตั้งค่าเริ่มต้นให้ปุ่มระดับชั้น โฟกัสไปที่ชั้นของนักเรียนทันที (ถ้ายังไม่ล็อกอินให้เป็น "all")
+  const [activeLevel, setActiveLevel] = useState(isLoggedIn ? userLevel : "all"); 
   const [hoveredId, setHoveredId] = useState(null);
   const [search, setSearch] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  // 📝 รายชื่อวิชาที่นักเรียน "ลงทะเบียนแล้ว" เก็บไว้ใน State (ดึงมาจาก localStorage)
+  const [registeredCourses, setRegisteredCourses] = useState([]);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
   }, [activeCategory, activeLevel, search]);
 
-  // 🌟 3. กรอง "วิชาทั้งหมด" ที่ได้รับอนุญาต (ป้องกันการเห็นวิชาข้ามชั้น)
+  // ดึงข้อมูลวิชาที่เคยลงทะเบียนไว้ตอนเปิดหน้าเว็บ เพื่อเอาไปเปลี่ยนสีและข้อความปุ่ม
+  useEffect(() => {
+    if (isLoggedIn) {
+      const savedReg = localStorage.getItem('registeredCourses');
+      if (savedReg) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setRegisteredCourses(JSON.parse(savedReg));
+      }
+    }
+  }, [isLoggedIn]);
+
+  // 🌟 ปรับปรุงจุดนี้: ปลดล็อกสาขาออก เพื่อให้ทุกคนมองเห็นวิชาทั้งหมดและเลือกลงทะเบียนได้อิสระ
   const allowedCourses = courses.filter((c) => {
-    // ตรวจสอบระดับชั้น (รองรับทั้งแบบข้อความ "ปวช.1" และแบบ Array ["ปวช.1", "ปวช.2"])
+    if (!isLoggedIn) return true; // เห็นทั้งหมดถ้ายังไม่เข้าสู่ระบบ
+
+    // 1. ตรวจสอบระดับชั้น (สำหรับคนที่ล็อกอินแล้ว) - ยังคงล็อกไว้เพื่อให้เด็กเห็นวิชาที่ตรงระดับชั้นเรียนตัวเอง
     const matchLevel = !c.level || 
                        c.level === "all" || 
                        c.level === userLevel || 
                        (Array.isArray(c.level) && c.level.includes(userLevel));
 
-    // ตรวจสอบสาขา
-    const matchMajor = !c.targetMajors || 
-                       c.targetMajors.includes("all") || 
-                       c.targetMajors.includes(userMajor);
+    // 2. ตรวจสอบสาขา: 🔓 ปลดล็อกออกโดยให้คืนค่า true เสมอ (ไม่ว่าเด็กจะอยู่สาขาไหน ก็ให้เห็นทุกวิชาของทุกสาขา)
+    const matchMajor = true; 
 
     return matchLevel && matchMajor; 
   });
 
-  // 🌟 4. สร้างรายชื่อ "แท็บหมวดหมู่" เฉพาะที่มีวิชาเรียน
   const allowedCategoryIds = new Set(allowedCourses.map(c => c.category));
   allowedCategoryIds.add("all"); 
   
   const visibleCategories = categories.filter(cat => allowedCategoryIds.has(cat.id));
 
-  // 🌟 5. กรองข้อมูลสำหรับแสดงผล (ค้นหา, หมวดหมู่, ระดับชั้น)
+  // กรองข้อมูลสำหรับการแสดงผลผลลัพธ์บนหน้าจอตาม Sidebar และ Search
   const filtered = allowedCourses.filter((c) => {
     const matchCat = activeCategory === "all" || c.category === activeCategory;
     
-    // ตรวจสอบว่าวิชานั้นตรงกับแท็บระดับชั้นที่กำลังกดอยู่หรือไม่
     const matchLevelFilter = activeLevel === "all" || 
                              c.level === activeLevel || 
                              (Array.isArray(c.level) && c.level.includes(activeLevel));
@@ -62,6 +76,11 @@ export default function CoursesPage() {
                         
     return matchCat && matchLevelFilter && matchSearch;
   });
+
+  // ✅ ฟังก์ชันจัดการเมื่อคลิกปุ่ม (ส่งตัวไปหน้า CourseDetail เพื่อไปกดลงทะเบียนหรือเรียน)
+  const handleCourseAction = (courseId) => {
+    navigate(`/course/${courseId}`);
+  };
 
   // คำนวณตัดแบ่งข้อมูลหน้าเพจ
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -142,9 +161,8 @@ export default function CoursesPage() {
         {/* Course area */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", gap: "10px", marginBottom: "25px", flexWrap: "wrap" }}>
-            {/* ✅ แสดงเฉพาะปุ่มระดับชั้น "ทั้งหมด" และชั้นที่ตรงกับของผู้ใช้เท่านั้น (ดักจับทั้ง id และ label เผื่อไว้) */}
             {levels
-              .filter(lvl => lvl.id === "all" || lvl.id === userLevel || lvl.label === userLevel)
+              .filter(lvl => !isLoggedIn || lvl.id === "all" || lvl.id === userLevel || lvl.label === userLevel)
               .map((lvl) => (
               <button
                 key={lvl.id}
@@ -170,6 +188,14 @@ export default function CoursesPage() {
           <div className="lh-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
             {currentItems.map(course => {
               const hovered = hoveredId === course.id;
+              
+              // 🌟 เช็คสถานะการลงทะเบียนเรียนมาแสดงผลบนปุ่ม
+              const isRegistered = registeredCourses.includes(course.id);
+              
+              // กำหนดสีปุ่มและข้อความตามสถานะการลงทะเบียนเรียน
+              const buttonBgColor = isRegistered ? course.color : "#10b981";
+              const buttonLabel = isRegistered ? "เข้าสู่ห้องเรียน →" : "📝 ดูรายละเอียดการลงทะเบียน";
+
               return (
                 <div key={course.id} className="lh-card" onMouseEnter={() => setHoveredId(course.id)} onMouseLeave={() => setHoveredId(null)}>
                   <div style={{ height: 5, background: `linear-gradient(90deg,${course.color},${course.color}88)` }} />
@@ -190,8 +216,24 @@ export default function CoursesPage() {
 
                   <div style={{ padding: "12px 16px 16px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
                     <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6, flex: 1 }}>{course.description}</p>
-                    <button onClick={() => navigate(`/course/${course.id}`)} style={{ width: "100%", padding: "9px", borderRadius: 10, border: "none", background: hovered ? course.color : `${course.color}18`, color: hovered ? "#fff" : course.color, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }}>
-                      เข้าสู่ห้องเรียน →
+                    
+                    {/* ปุ่มลิงก์เพื่อไปตัดสินใจลงทะเบียนในหน้า CourseDetail */}
+                    <button 
+                      onClick={() => handleCourseAction(course.id)} 
+                      style={{ 
+                        width: "100%", 
+                        padding: "9px", 
+                        borderRadius: 10, 
+                        border: "none", 
+                        background: hovered ? buttonBgColor : `${buttonBgColor}18`, 
+                        color: hovered ? "#fff" : buttonBgColor, 
+                        fontSize: 13, 
+                        fontWeight: 700, 
+                        cursor: "pointer", 
+                        transition: "all 0.2s" 
+                      }}
+                    >
+                      {buttonLabel}
                     </button>
                   </div>
                 </div>

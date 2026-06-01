@@ -1,7 +1,41 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
+// ============================================================
+// [SECURITY] Register rate limiting — ป้องกัน spam สมัครซ้ำ
+// ============================================================
+const REG_MAX = 3;           // สมัครผิดพลาดได้สูงสุด 3 ครั้ง
+const REG_LOCK_MS = 30 * 60 * 1000; // lock 30 นาที
+const REG_RL_KEY = 'rl_register';
+
+function getRegRL() {
+  try {
+    const raw = sessionStorage.getItem(REG_RL_KEY);
+    return raw ? JSON.parse(raw) : { attempts: 0, lockedUntil: null };
+  } catch {
+    return { attempts: 0, lockedUntil: null };
+  }
+}
+function setRegRL(data) { sessionStorage.setItem(REG_RL_KEY, JSON.stringify(data)); }
+function resetRegRL() { sessionStorage.removeItem(REG_RL_KEY); }
+
+// ============================================================
+// [SECURITY] Sanitize — ตัด HTML injection ออกจาก string
+// ============================================================
+function sanitize(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .trim();
+}
+
+// ============================================================
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,27 +47,39 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     level: 'ปวช.1',
-    category: 'ช่างยนต์'
+    category: 'ช่างยนต์',
   });
-
   const [isLoading, setIsLoading] = useState(false);
+  const [pwStrength, setPwStrength] = useState(0); // 0-3
+
+  // ============================================================
+  // [SECURITY] ตรวจความแข็งแกร่งรหัสผ่าน
+  // ============================================================
+  function checkStrength(pw) {
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[a-zA-Z]/.test(pw) && /\d/.test(pw)) score++;
+    if (/[^a-zA-Z0-9]/.test(pw)) score++; // มีอักขระพิเศษ
+    return score;
+  }
+
+  const strengthLabel = ['', 'อ่อน', 'ปานกลาง', 'แข็งแกร่ง'];
+  const strengthColor = ['', '#ef4444', '#f59e0b', '#16a34a'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // username: ตัวเลขเท่านั้น ไม่เกิน 13 หลัก
     if (name === 'username') {
       if (!/^\d*$/.test(value) || value.length > 13) return;
     }
-
-    // phone: ตัวเลขเท่านั้น ไม่เกิน 10 หลัก
     if (name === 'phone') {
       if (!/^\d*$/.test(value) || value.length > 10) return;
     }
-
-    // ชื่อ/นามสกุล: ภาษาไทยเท่านั้น
     if (name === 'firstName' || name === 'lastName') {
       if (value !== '' && !/^[ก-๙\s]+$/.test(value)) return;
+    }
+    if (name === 'password') {
+      setPwStrength(checkStrength(value));
     }
 
     setFormData({ ...formData, [name]: value });
@@ -42,68 +88,90 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // ตรวจสอบ username ครบ 13 หลัก
+    // [SECURITY] ตรวจ rate limit ก่อน
+    const rl = getRegRL();
+    if (rl.lockedUntil && Date.now() < rl.lockedUntil) {
+      const mins = Math.ceil((rl.lockedUntil - Date.now()) / 60000);
+      Swal.fire({
+        icon: 'error',
+        title: 'ถูกล็อกชั่วคราว',
+        text: `พยายามสมัครสมาชิกบ่อยเกินไป กรุณารอ ${mins} นาที`,
+        confirmButtonColor: '#ef4444',
+        width: '350px',
+      });
+      return;
+    }
+
+    // [SECURITY] Validate ฝั่ง client (server จะ validate ซ้ำอีกครั้ง)
     if (formData.username.length !== 13) {
       Swal.fire({ icon: 'warning', title: 'เลขบัตรประชาชนไม่ถูกต้อง', text: 'กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก', confirmButtonColor: '#1a73e8', width: '350px' });
       return;
     }
-
-    // ตรวจสอบเบอร์โทร 10 หลัก
     if (formData.phone.length !== 10) {
       Swal.fire({ icon: 'warning', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก', confirmButtonColor: '#1a73e8', width: '350px' });
       return;
     }
+    if (formData.firstName.trim().length < 2) {
+      Swal.fire({ icon: 'warning', title: 'ชื่อไม่ถูกต้อง', text: 'กรุณากรอกชื่อจริงให้ถูกต้อง', confirmButtonColor: '#1a73e8', width: '350px' });
+      return;
+    }
+    if (formData.lastName.trim().length < 2) {
+      Swal.fire({ icon: 'warning', title: 'นามสกุลไม่ถูกต้อง', text: 'กรุณากรอกนามสกุลให้ถูกต้อง', confirmButtonColor: '#1a73e8', width: '350px' });
+      return;
+    }
 
-    // ตรวจสอบรหัสผ่าน: ขั้นต่ำ 8 ตัว มีตัวอังกฤษและตัวเลขอย่างน้อย 1 ตัว
     const passwordValid = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(formData.password);
     if (!passwordValid) {
       Swal.fire({ icon: 'warning', title: 'รหัสผ่านไม่ถูกต้อง', html: 'รหัสผ่านต้องมี<b>อย่างน้อย 8 ตัวอักษร</b><br>และต้องมี<b>ตัวอังกฤษ</b>และ<b>ตัวเลข</b>ผสมกัน', confirmButtonColor: '#1a73e8', width: '350px' });
       return;
     }
-
-    // ตรวจสอบรหัสผ่านตรงกัน
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({ icon: 'warning', title: 'รหัสผ่านไม่ตรงกัน', text: 'รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน', confirmButtonColor: '#1a73e8', width: '350px' });
       return;
     }
 
     setIsLoading(true);
-
-    // 👈 1. เพิ่มป๊อปอัพโหลดตรงนี้
-    Swal.fire({ 
-      title: 'กำลังบันทึกข้อมูล...', 
-      allowOutsideClick: false, 
-      showConfirmButton: false, 
-      padding: '2em', 
-      width: 'auto', 
-      backdrop: 'rgba(0,0,0,0.4)', 
-      didOpen: () => { Swal.showLoading(); } 
+    Swal.fire({
+      title: 'กำลังบันทึกข้อมูล...',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      padding: '2em',
+      width: 'auto',
+      backdrop: 'rgba(0,0,0,0.4)',
+      didOpen: () => { Swal.showLoading(); },
     });
 
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwAq86PGKnwuXt3JwqSZ8Vz4VIDs8fq5Ean5TiZfnHg0FaYn0QHVQnv_7Yd1I1ZZsVRoQ/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyk4q1W5Q1JrQohhZRwT_6PTWxQwj0ydgdM3BjadDqXkywxNkQLWApRSAMHntA5xKnQ4Q/exec"; // <-- เปลี่ยนเป็น URL ของคุณ
 
     try {
       const response = await fetch(WEB_APP_URL, {
         method: 'POST',
-        // ลบ mode: 'no-cors' ออก
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ใช้ text/plain แบบเดียวกับหน้า Login เพื่อเลี่ยงปัญหา CORS
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          action: "register",
-          username: "'" + formData.username,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: "'" + formData.phone,
-          password: formData.password,
-          category: formData.category,
-          level: formData.level
+          action: 'register',
+          // ✅ ใส่ค่า Secret Key ที่ตรงกับใน Google Apps Script ของคุณลงไปตรงๆ
+          secretKey: "8642ef1ceffd67950e24180bb1b11a9241f686bfe57288abc3b7b6ef91018e9e", 
+          username: sanitize(formData.username),
+          firstName: sanitize(formData.firstName),
+          lastName: sanitize(formData.lastName),
+          phone: sanitize(formData.phone),
+          password: formData.password, // ไม่ sanitize password เพราะอาจตัดอักขระที่ตั้งใจใช้
+          category: sanitize(formData.category),
+          level: sanitize(formData.level),
         }),
       });
 
-      // อ่านค่าตอบกลับจาก Google Apps Script
       const dataText = await response.text();
-      let result = JSON.parse(dataText);
+      let result;
+      try {
+        result = JSON.parse(dataText);
+      } catch {
+        throw new Error('รูปแบบข้อมูลจากเซิร์ฟเวอร์ไม่ถูกต้อง');
+      }
 
-      if (result.status === "success") {
+      if (result.status === 'success') {
+        // [SECURITY] สมัครสำเร็จ → reset rate limit
+        resetRegRL();
         Swal.fire({
           icon: 'success',
           title: 'สมัครสมาชิกสำเร็จ!',
@@ -113,25 +181,46 @@ const Register = () => {
           showConfirmButton: false,
           width: '350px',
           padding: '1.5em',
-          backdrop: 'rgba(0,0,0,0.4)'
+          backdrop: 'rgba(0,0,0,0.4)',
         }).then(() => navigate('/'));
       } else {
-        // กรณีเซิร์ฟเวอร์ตอบกลับมาว่าซ้ำ หรือมี error อื่นๆ
-        Swal.fire({ 
-          icon: 'error', 
-          title: 'สมัครไม่สำเร็จ', 
-          text: result.message || 'เกิดข้อผิดพลาดบางอย่าง', 
-          confirmButtonColor: '#d33', 
-          width: '350px' 
+        // [SECURITY] นับ failed attempt
+        const current = getRegRL();
+        const newAttempts = (current.attempts || 0) + 1;
+        if (newAttempts >= REG_MAX) {
+          setRegRL({ attempts: newAttempts, lockedUntil: Date.now() + REG_LOCK_MS });
+        } else {
+          setRegRL({ attempts: newAttempts, lockedUntil: null });
+        }
+
+        // [SECURITY] แสดงเฉพาะ message ที่ปลอดภัย ไม่ expose server error
+        const safeMessages = {
+          'duplicate': 'เลขบัตรประชาชนนี้มีในระบบแล้ว',
+          'invalid': 'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง',
+        };
+        const displayMsg = safeMessages[result.code] || 'ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่อีกครั้ง';
+        Swal.fire({
+          icon: 'error',
+          title: 'สมัครไม่สำเร็จ',
+          text: displayMsg,
+          confirmButtonColor: '#d33',
+          width: '350px',
         });
       }
 
     } catch (error) {
-      Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่', confirmButtonColor: '#d33', width: '350px' });
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่',
+        confirmButtonColor: '#d33',
+        width: '350px',
+      });
     } finally {
       setIsLoading(false);
     }
-};
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.card}>
@@ -167,12 +256,39 @@ const Register = () => {
 
           <div style={styles.inputGroup}>
             <label style={styles.label}>รหัสผ่าน <span style={styles.note}>*ตัวอังกฤษ+ตัวเลข ขั้นต่ำ 8 ตัว</span></label>
-            <input name="password" type="password" placeholder="Password" style={styles.input} onChange={handleChange} required />
+            <input name="password" type="password" placeholder="Password" style={styles.input} value={formData.password} onChange={handleChange} required />
+            {/* [SECURITY] แสดง password strength meter */}
+            {formData.password.length > 0 && (
+              <div style={{ marginTop: '6px' }}>
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '3px' }}>
+                  {[1, 2, 3].map(i => (
+                    <div key={i} style={{
+                      flex: 1, height: '4px', borderRadius: '2px',
+                      background: pwStrength >= i ? strengthColor[pwStrength] : '#e2e8f0',
+                      transition: 'background 0.3s',
+                    }} />
+                  ))}
+                </div>
+                <div style={{ fontSize: '11px', color: strengthColor[pwStrength] }}>
+                  ความแข็งแกร่ง: {strengthLabel[pwStrength]}
+                </div>
+              </div>
+            )}
           </div>
 
           <div style={styles.inputGroup}>
             <label style={styles.label}>ยืนยันรหัสผ่าน</label>
-            <input name="confirmPassword" type="password" placeholder="Confirm Password" style={styles.input} onChange={handleChange} required />
+            <input name="confirmPassword" type="password" placeholder="Confirm Password" style={{
+              ...styles.input,
+              borderColor: formData.confirmPassword.length > 0
+                ? (formData.password === formData.confirmPassword ? '#16a34a' : '#ef4444')
+                : '#ccc',
+            }} value={formData.confirmPassword} onChange={handleChange} required />
+            {formData.confirmPassword.length > 0 && (
+              <div style={{ fontSize: '11px', marginTop: '3px', color: formData.password === formData.confirmPassword ? '#16a34a' : '#ef4444' }}>
+                {formData.password === formData.confirmPassword ? '✓ รหัสผ่านตรงกัน' : '✗ รหัสผ่านไม่ตรงกัน'}
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
@@ -230,7 +346,7 @@ const styles = {
   input: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box', outline: 'none', fontFamily: "'Kanit', sans-serif" },
   select: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', background: '#fff', outline: 'none', fontFamily: "'Kanit', sans-serif" },
   regBtn: { color: '#fff', padding: '12px', border: 'none', borderRadius: '6px', fontWeight: 'bold', marginTop: '10px', transition: '0.3s', fontFamily: "'Kanit', sans-serif" },
-  backBtn: { background: 'none', color: '#666', padding: '10px', border: 'none', cursor: 'pointer', fontSize: '14px', marginTop: '5px', fontFamily: "'Kanit', sans-serif" }
+  backBtn: { background: 'none', color: '#666', padding: '10px', border: 'none', cursor: 'pointer', fontSize: '14px', marginTop: '5px', fontFamily: "'Kanit', sans-serif" },
 };
 
 export default Register;
